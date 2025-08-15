@@ -27,6 +27,7 @@ repositories {
 val lombokVersion = "1.18.36"
 val mapStructVersion = "1.6.3"
 val lombokMapstructBindingVersion = "0.2.0"
+val minioVersion = "8.5.17"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
@@ -34,6 +35,7 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-security")
 	implementation("org.springframework.boot:spring-boot-starter-validation")
 	implementation("org.springframework.boot:spring-boot-starter-web")
+	implementation("io.minio:minio:$minioVersion")
 
 	// Lombok
 	compileOnly("org.projectlombok:lombok:$lombokVersion")
