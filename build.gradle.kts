@@ -1,0 +1,55 @@
+plugins {
+	java
+	id("org.springframework.boot") version "3.5.4"
+	id("io.spring.dependency-management") version "1.1.7"
+}
+
+group = "com.pr0f1t"
+version = "0.0.1"
+description = "Educational purposes project - restaurant review platform"
+
+java {
+	toolchain {
+		languageVersion = JavaLanguageVersion.of(21)
+	}
+}
+
+configurations {
+	compileOnly {
+		extendsFrom(configurations.annotationProcessor.get())
+	}
+}
+
+repositories {
+	mavenCentral()
+}
+
+val lombokVersion = "1.18.36"
+val mapStructVersion = "1.6.3"
+val lombokMapstructBindingVersion = "0.2.0"
+
+dependencies {
+	implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
+	implementation("org.springframework.boot:spring-boot-starter-oauth2-resource-server")
+	implementation("org.springframework.boot:spring-boot-starter-security")
+	implementation("org.springframework.boot:spring-boot-starter-validation")
+	implementation("org.springframework.boot:spring-boot-starter-web")
+
+	// Lombok
+	compileOnly("org.projectlombok:lombok:$lombokVersion")
+	annotationProcessor("org.projectlombok:lombok:$lombokVersion")
+
+	// MapStruct
+	implementation("org.mapstruct:mapstruct:$mapStructVersion")
+	annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
+
+	// Lombok-MapStruct binding
+	annotationProcessor("org.projectlombok:lombok-mapstruct-binding:$lombokMapstructBindingVersion")
+	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.springframework.security:spring-security-test")
+	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+}
+
+tasks.withType<Test> {
+	useJUnitPlatform()
+}
