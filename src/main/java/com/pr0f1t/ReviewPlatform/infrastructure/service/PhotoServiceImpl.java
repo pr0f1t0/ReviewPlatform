@@ -19,7 +19,6 @@ public class PhotoServiceImpl implements PhotoService {
 
     private final StorageService storageService;
 
-
     @Override
     public CompletableFuture<Photo> uploadPhotoAsync(MultipartFile file) {
 
@@ -33,7 +32,6 @@ public class PhotoServiceImpl implements PhotoService {
                 );
 
     }
-
 
     @Override
     public CompletableFuture<Optional<Resource>> getPhotoAsResourceAsync(String id) {
