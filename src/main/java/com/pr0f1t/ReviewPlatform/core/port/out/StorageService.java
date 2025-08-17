@@ -6,7 +6,7 @@ import org.springframework.web.multipart.MultipartFile;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public interface ImageStorageService {
-    CompletableFuture<String> store(MultipartFile file, String fileName);
-    CompletableFuture<Optional<Resource>> load(String id);
+public interface StorageService {
+    CompletableFuture<String> storeAsync(MultipartFile file, String fileName);
+    CompletableFuture<Optional<Resource>> loadAsResourceAsync(String id);
 }
