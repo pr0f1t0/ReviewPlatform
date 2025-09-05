@@ -17,7 +17,7 @@ public class Address {
     private String streetNumber;
 
     @Field(type = FieldType.Text)
-    private String StreetName;
+    private String streetName;
 
     @Field(type = FieldType.Keyword)
     private String unit;
