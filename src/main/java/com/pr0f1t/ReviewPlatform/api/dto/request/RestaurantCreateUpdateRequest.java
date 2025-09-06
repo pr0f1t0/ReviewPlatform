@@ -1,7 +1,10 @@
 package com.pr0f1t.ReviewPlatform.api.dto.request;
 
-import com.pr0f1t.ReviewPlatform.core.domain.entity.Address;
-import com.pr0f1t.ReviewPlatform.core.domain.entity.OperatingHours;
+import com.pr0f1t.ReviewPlatform.core.domain.dto.AddressDto;
+import com.pr0f1t.ReviewPlatform.core.domain.dto.OperatingHoursDto;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,10 +17,21 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 public class RestaurantCreateUpdateRequest {
+    @NotBlank(message = "Restaurant name is required")
     private String name;
+
+    @NotBlank(message = "Cuisine type is required")
     private String cuisineType;
+
+    @NotBlank(message = "Contact information is required")
     private String contactInformation;
-    private Address address;
-    private OperatingHours operatingHours;
+
+    @Valid
+    private AddressDto address;
+
+    @Valid
+    private OperatingHoursDto operatingHours;
+
+    @Size(min = 1, message = "At least one photo ID is required")
     private List<String> photoIds;
 }
