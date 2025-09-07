@@ -3,17 +3,17 @@ package com.pr0f1t.ReviewPlatform.api.controller;
 import com.pr0f1t.ReviewPlatform.api.dto.request.RestaurantCreateUpdateRequest;
 import com.pr0f1t.ReviewPlatform.api.mapper.RestaurantRequestMapper;
 import com.pr0f1t.ReviewPlatform.core.domain.dto.RestaurantDto;
+import com.pr0f1t.ReviewPlatform.core.domain.dto.RestaurantSummaryDto;
 import com.pr0f1t.ReviewPlatform.core.domain.dto.command.RestaurantCreateUpdateCommand;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.Restaurant;
 import com.pr0f1t.ReviewPlatform.core.domain.mapper.RestaurantMapper;
 import com.pr0f1t.ReviewPlatform.core.port.in.RestaurantService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping(path = "/api/restaurants")
@@ -35,4 +35,18 @@ public class RestaurantController {
         return ResponseEntity.ok(savedRestaurantDto);
     }
 
+    @GetMapping
+    public Page<RestaurantSummaryDto> searchRestaurants(@RequestParam(required = false) String q,
+                                                        @RequestParam(required = false) Float minRating,
+                                                        @RequestParam(required = false) Float latitude,
+                                                        @RequestParam(required = false) Float longitude,
+                                                        @RequestParam(required = false) Float radius,
+                                                        @RequestParam(defaultValue = "1") int page,
+                                                        @RequestParam(defaultValue = "20") int size
+    ){
+        Page<Restaurant> searchResults =  restaurantService.searchRestaurants(
+                q, minRating, latitude, longitude, radius, PageRequest.of(page - 1, size)
+        );
+        return searchResults.map(restaurantMapper::toSummaryDto);
+    }
 }

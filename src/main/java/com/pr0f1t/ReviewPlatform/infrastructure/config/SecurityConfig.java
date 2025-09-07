@@ -16,9 +16,10 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.authorizeHttpRequests(auth -> auth
-                                .requestMatchers(HttpMethod.GET, "/api/photos**").permitAll()
-                                .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**",
+                        .requestMatchers(HttpMethod.GET, "/api/photos/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/swagger-ui/**", "/v3/api-docs/**",
                                         "/swagger-resources/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/restaurants/**").permitAll()
                                 .anyRequest().authenticated()
                 )
                 .oauth2ResourceServer(oauth2 ->
