@@ -5,6 +5,7 @@ import com.pr0f1t.ReviewPlatform.core.domain.entity.Address;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.GeoLocation;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.Photo;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.Restaurant;
+import com.pr0f1t.ReviewPlatform.core.exception.RestaurantNotFoundException;
 import com.pr0f1t.ReviewPlatform.core.port.in.RestaurantService;
 import com.pr0f1t.ReviewPlatform.core.port.out.GeoLocationService;
 import com.pr0f1t.ReviewPlatform.infrastructure.repository.RestaurantRepository;
@@ -75,5 +76,31 @@ public class RestaurantServiceImpl implements RestaurantService {
     @Override
     public Optional<Restaurant> getRestaurant(String id) {
         return restaurantRepository.findById(id);
+    }
+
+    @Override
+    public Restaurant updateRestaurant(String id, RestaurantCreateUpdateCommand command) {
+        Restaurant restaurant = getRestaurant(id)
+                .orElseThrow(() -> new RestaurantNotFoundException("Restaurant with ID does not exist: " + id));
+
+        GeoLocation newGeoLocation = geoLocationService.getGeoLocation(command.getAddress());
+
+        GeoPoint newGeoPoint = new GeoPoint(newGeoLocation.getLatitude(), newGeoLocation.getLongitude());
+
+        List<String> photoIds = command.getPhotoIds();
+        List<Photo> photos = photoIds.stream().map(photoUrl -> Photo.builder()
+                .url(photoUrl)
+                .uploadTime(LocalDateTime.now())
+                .build()).toList();
+
+        restaurant.setName(command.getName());
+        restaurant.setCuisineType(command.getCuisineType());
+        restaurant.setContactInformation(command.getContactInformation());
+        restaurant.setAddress(command.getAddress());
+        restaurant.setGeoLocation(newGeoPoint);
+        restaurant.setOperatingHours(command.getOperatingHours());
+        restaurant.setPhotos(photos);
+
+        return restaurantRepository.save(restaurant);
     }
 }

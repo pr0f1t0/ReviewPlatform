@@ -2,6 +2,7 @@ package com.pr0f1t.ReviewPlatform.api.controller;
 
 import com.pr0f1t.ReviewPlatform.api.dto.ErrorDto;
 import com.pr0f1t.ReviewPlatform.core.exception.BaseException;
+import com.pr0f1t.ReviewPlatform.core.exception.RestaurantNotFoundException;
 import com.pr0f1t.ReviewPlatform.core.exception.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,9 +19,20 @@ import java.util.stream.Collectors;
 @Slf4j
 public class ErrorController {
 
+    @ExceptionHandler(RestaurantNotFoundException.class)
+    public ResponseEntity<ErrorDto> handleRestaurantNotFoundException(RestaurantNotFoundException ex){
+        log.error("Caught RestaurantNotFoundException");
+
+        ErrorDto errorDto = ErrorDto.builder()
+                .status(HttpStatus.NOT_FOUND.value())
+                .message("The specified restaurant was not found")
+                .build();
+        return new ResponseEntity<>(errorDto, HttpStatus.NOT_FOUND);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDto> handleMethodArgumentNotValidExceptionException(MethodArgumentNotValidException ex) {
-        log.error("MethodArgumentNotValidException caught", ex);
+        log.error("Caught MethodArgumentNotValidException", ex);
 
         String errorMessage = ex.getBindingResult().getFieldErrors().stream()
                 .map(error -> error.getField() + ": " +
@@ -36,7 +48,7 @@ public class ErrorController {
 
     @ExceptionHandler(StorageException.class)
     public ResponseEntity<ErrorDto> handleStorageException(StorageException e) {
-        log.error("StorageException caught: ", e);
+        log.error("Caught StorageException", e);
 
         ErrorDto error = ErrorDto.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -48,7 +60,7 @@ public class ErrorController {
 
     @ExceptionHandler(BaseException.class)
     public ResponseEntity<ErrorDto> handleBaseException(BaseException e) {
-        log.error("BaseException caught: ", e);
+        log.error("Caught BaseException", e);
 
         ErrorDto error = ErrorDto.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
@@ -60,7 +72,7 @@ public class ErrorController {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorDto> handleException(Exception e) {
-        log.error("Unexpected exception caught: ", e);
+        log.error("Caught Unexpected exception", e);
 
         ErrorDto error = ErrorDto.builder()
                 .status(HttpStatus.INTERNAL_SERVER_ERROR.value())
