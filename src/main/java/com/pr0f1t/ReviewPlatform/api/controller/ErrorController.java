@@ -3,6 +3,7 @@ package com.pr0f1t.ReviewPlatform.api.controller;
 import com.pr0f1t.ReviewPlatform.api.dto.ErrorDto;
 import com.pr0f1t.ReviewPlatform.core.exception.BaseException;
 import com.pr0f1t.ReviewPlatform.core.exception.RestaurantNotFoundException;
+import com.pr0f1t.ReviewPlatform.core.exception.ReviewNotAllowedException;
 import com.pr0f1t.ReviewPlatform.core.exception.StorageException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
@@ -18,6 +19,17 @@ import java.util.stream.Collectors;
 @ControllerAdvice
 @Slf4j
 public class ErrorController {
+
+    @ExceptionHandler(ReviewNotAllowedException.class)
+    public ResponseEntity<ErrorDto> handleReviewNotAllowedException(ReviewNotAllowedException ex) {
+        log.error("Caught handleReviewNotAllowedException", ex);
+
+        ErrorDto errorDto = ErrorDto.builder()
+                .status(HttpStatus.BAD_REQUEST.value())
+                .message("The specified review cannot be created or updated")
+                .build();
+        return new ResponseEntity<>(errorDto, HttpStatus.BAD_REQUEST);
+    }
 
     @ExceptionHandler(RestaurantNotFoundException.class)
     public ResponseEntity<ErrorDto> handleRestaurantNotFoundException(RestaurantNotFoundException ex){

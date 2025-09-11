@@ -27,7 +27,7 @@ public class RestaurantController {
     @PostMapping
     public ResponseEntity<RestaurantDto> createRestaurant(@Valid @RequestBody RestaurantCreateUpdateRequest request) {
         RestaurantCreateUpdateCommand restaurantCreateUpdateRequest = restaurantRequestMapper
-                .toCommand(request);
+                .toRestaurantCreateUpdateCommand(request);
 
         Restaurant restaurant = restaurantService.createRestaurant(restaurantCreateUpdateRequest);
         RestaurantDto savedRestaurantDto = restaurantMapper.toRestaurantDto(restaurant);
@@ -62,10 +62,16 @@ public class RestaurantController {
                                                           @Valid @RequestBody RestaurantCreateUpdateRequest request) {
 
         RestaurantCreateUpdateCommand restaurantCreateUpdateRequest = restaurantRequestMapper
-                .toCommand(request);
+                .toRestaurantCreateUpdateCommand(request);
 
         Restaurant updatedRestaurant = restaurantService.updateRestaurant(restaurant_id, restaurantCreateUpdateRequest);
 
         return ResponseEntity.ok(restaurantMapper.toRestaurantDto(updatedRestaurant));
+    }
+
+    @DeleteMapping(path = "/{restaurant_id}")
+    public ResponseEntity<Void> deleteRestaurant(@PathVariable("restaurant_id") String restaurant_id){
+        restaurantService.deleteRestaurant(restaurant_id);
+        return ResponseEntity.noContent().build();
     }
 }
