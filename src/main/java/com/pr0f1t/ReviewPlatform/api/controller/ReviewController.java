@@ -58,6 +58,44 @@ public class ReviewController {
                 .map(reviewMapper::toReviewDto);
     }
 
+    @GetMapping(path = "/{reviewId}")
+    public ResponseEntity<ReviewDto> getReview(
+            @PathVariable String restaurantId,
+            @PathVariable String reviewId
+    ){
+        return reviewService.getReview(restaurantId, reviewId)
+                .map(reviewMapper::toReviewDto)
+                .map(ResponseEntity::ok)
+                .orElseGet(()  -> ResponseEntity.noContent().build());
+    }
+
+    @PutMapping(path = "/{reviewId}")
+    public ResponseEntity<ReviewDto> updateReview(
+            @PathVariable String restaurantId,
+            @PathVariable String reviewId,
+            @Valid @RequestBody ReviewCreateUpdateRequest request,
+            @AuthenticationPrincipal Jwt jwt
+    ){
+        ReviewCreateUpdateCommand command = reviewRequestMapper.toReviewCreateUpdateCommand(request);
+        User user = jwtToUser(jwt);
+
+        Review updatedReview = reviewService.updateReview(user, restaurantId, reviewId, command);
+
+        return ResponseEntity.ok(reviewMapper.toReviewDto(updatedReview));
+    }
+
+    @DeleteMapping(path = "/{reviewId}")
+    public ResponseEntity<Void> deleteReview(
+            @PathVariable String restaurantId,
+            @PathVariable String reviewId,
+            @AuthenticationPrincipal Jwt jwt
+    ){
+        User user =  jwtToUser(jwt);
+        reviewService.deleteReview(user, restaurantId, reviewId);
+
+        return ResponseEntity.noContent().build();
+    }
+
     private User jwtToUser(Jwt jwt) {
         return User.builder()
                 .id(jwt.getSubject())
