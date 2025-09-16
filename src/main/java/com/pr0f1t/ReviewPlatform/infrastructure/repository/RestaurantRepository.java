@@ -17,7 +17,7 @@ public interface RestaurantRepository extends ElasticsearchRepository<Restaurant
             "   ]," +
             "   \"should\": [" +
             "     {\"fuzzy\": {\"name\": {\"value\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
-            "     {\"fuzzy\": {\"cuisineType\": {\"value\": \"?0\", \"fuzziness\": \"AUTO\"}}}," +
+            "     {\"fuzzy\": {\"cuisineType\": {\"value\": \"?0\", \"fuzziness\": \"AUTO\"}}}" +
             "   ]," +
             "   \"minimum_should_match\": 1" +
             "  }" +

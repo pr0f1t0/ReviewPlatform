@@ -7,7 +7,7 @@ import com.pr0f1t.ReviewPlatform.core.domain.dto.RestaurantSummaryDto;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.Address;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.Restaurant;
 import com.pr0f1t.ReviewPlatform.core.domain.entity.Review;
-import org.jetbrains.annotations.NotNull;
+import jakarta.validation.constraints.NotNull;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.Named;
@@ -19,6 +19,7 @@ import java.util.List;
 @Mapper(componentModel = "spring", unmappedTargetPolicy = ReportingPolicy.IGNORE)
 public interface RestaurantMapper {
 
+    @Mapping(source = "reviews", target = "totalReviews", qualifiedByName = "populateTotalReviews")
     RestaurantDto toRestaurantDto(Restaurant restaurant);
 
     @Mapping(source = "reviews", target = "totalReviews", qualifiedByName = "populateTotalReviews")

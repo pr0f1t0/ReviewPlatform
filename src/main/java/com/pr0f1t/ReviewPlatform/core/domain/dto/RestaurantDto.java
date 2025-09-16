@@ -36,4 +36,6 @@ public class RestaurantDto {
     private List<Review> reviews = new ArrayList<>();
 
     private UserDto createdBy;
+
+    private Integer totalReviews;
 }
